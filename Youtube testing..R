@@ -23,6 +23,7 @@ install.packages("ggplot2")
 library(ggplot2)
 
 # Assuming you're using 'Views' for the x-axis and 'Watch.time..hours.' for the y-axis
+
 ggplot(youtube_data, aes(x = Views, y = Watch.time..hours.)) +
   geom_point() +  # Add points
   facet_wrap(~ Geography) +  # Create facets for each geography
@@ -34,28 +35,19 @@ ggplot(youtube_data, aes(x = Views, y = Watch.time..hours.)) +
 
 
 
-# Load libraries
+# Correcting the column name and trimming white spaces
+youtube_data$VideoPublishTime <- trimws(youtube_data$video.publish.time)
+
+# Converting to Date format
+youtube_data$VideoPublishTime <- as.Date(youtube_data$VideoPublishTime, format = "%B %d, %Y")
+
 library(ggplot2)
 
-library(dplyr)
-top_countries <- head(youtube_data[order(youtube_data$Views, decreasing = TRUE),], 5)
-
-# Install and load ggplot2
-install.packages("ggplot2")
-library(ggplot2)
-
-# Assuming your data is in a data frame called 'youtube_data'
-
-# Sorting and selecting the top 5 countries based on Views
-top_countries <- head(youtube_data[order(youtube_data$Views, decreasing = TRUE),], 5)
-
-# Creating the bar chart
-ggplot(top_countries, aes(x = reorder(Geography, Views), y = Views)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
-  theme_minimal() +
-  labs(title = "Top 5 Countries by YouTube Views",
-       x = "Country",
+ggplot(youtube_data, aes(x = VideoPublishTime, y = Views)) +
+  geom_line(group = 1) +
+  labs(title = "Trend of Views Over Time",
+       x = "Publication Date",
        y = "Views") +
-  coord_flip()  # Flips the axes for a horizontal bar chart
+  theme_minimal()
 
 
